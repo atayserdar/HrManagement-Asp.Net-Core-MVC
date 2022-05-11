@@ -1,0 +1,31 @@
+﻿.card-container {
+    /*padding-bottom: 10px;*/
+    margin-top:12px;
+    margin-right:11px;
+    /*margin-left:1px;*/
+    float: left;
+}
+
+.card-profile {
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+}
+
+.employee-title {
+    color: grey;
+    font-size: 18px;
+}
+
+.profile-pic {
+    padding-top: 30px;
+}
+
+.profile-pic > img {
+    border: 1px solid black;
+    border-radius: 60px;
+    width: 70%;
+}
+
+

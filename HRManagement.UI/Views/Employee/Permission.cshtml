@@ -1,0 +1,103 @@
+﻿@model List<EmployeePermissionVM>
+
+@{
+    ViewData["Title"] = "Permission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .izin-ekle{
+        color:snow;
+    }
+
+    .green{
+        color:limegreen;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .yellow{
+        color: orange;
+    }
+</style>
+
+<body>
+
+    <h4 style=" margin-top:100px; margin-left:550px">İzinlerim</h4>
+
+            <div>
+            <div class="item">
+                <button class="btn btn-primary btn-lg" type="submit"><a asp-action="CreatePermission" asp-controller="Employee" class="izin-ekle">İzin Ekle</a></button>
+            </div>
+        </div>
+
+    <!-- Advance List Table Start -->
+
+        <div class="col-md-12 col-sm-12 ">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card-box table-responsive">
+                                <table id="datatable-keytable" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">İzin Kodu</th> <!--PermissionID-->
+                                            <th scope="col">İzin Türü</th>
+                                            <th scope="col">İzin Günü</th> <!--İzin Günü sayısı tutulacak kotnrolü de sağlanacak-->
+                                            <th scope="col">Açıklama</th> 
+                                            <th scope="col">Talep tarihi</th>
+                                            <th scope="col">Baş. Tarihi</th>
+                                            <th scope="col">Bitiş Tarihi</th>
+                                            <th scope="col">Onay Durumu</th> <!--PPermitStatus > Sarı, Yeşil, Kırmızı bg-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (EmployeePermissionVM item in Model)
+                                        {
+                                        <tr>
+                                            <td>@item.PermissionID</td>
+                                            <td>@item.PermissionType İzni</td>
+                                            <td>@item.NumberOfDaysOff</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.RequestDate.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.FinishDate.ToString("dd/MM/yyyy")</td>
+                                            @if (item.PermitStatus == PermitStatus.Onaylı)
+                                            {
+                                                <td class="green">@item.PermitStatus</td>
+                                            }
+                                            else if  (item.PermitStatus == PermitStatus.Onaylanmamış)
+                                            {
+                                                <td class="red">@item.PermitStatus</td>
+                                            }
+                                            else if(item.PermitStatus == PermitStatus.Bekleyen)
+                                            {
+                                                <td class="yellow">@item.PermitStatus</td>
+                                            }
+
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+    <!-- Advance List Table End -->
+
+    @*bootstrapv4*@
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C  +OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/ reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-  VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+</body>
+
+
+
+
+

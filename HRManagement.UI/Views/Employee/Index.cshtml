@@ -1,0 +1,334 @@
+﻿@model SingleEmployeeVM
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var sumPer = ViewBag.sumPermision;
+    var sumAdv = ViewBag.sumAdvance;
+}
+
+
+<style>
+
+    .green {
+        color: limegreen;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .yellow {
+        color: orange;
+    }
+</style>
+
+
+<div class="row">
+
+    @*Çalışan Bilgileri Başlangıç*@
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+
+            <div class="x_content">
+                <div class="col-md-3 col-sm-3  profile_left">
+                    <div class="profile_img">
+                        <div id="crop-avatar">
+                            <!-- Current avatar -->
+                            <img class="img-responsive avatar-view" src="~/gentelella-master/production/images/picture.jpg" alt="Avatar" title="Change the avatar">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <h3>Kaan Lokum</h3>
+
+                    <ul class="list-unstyled user_data">
+                        <li>
+                            <i class="fa fa-map-marker user-profile-icon"></i> @Model.Address
+                        </li>
+                        <br />
+
+                        <li>
+                            <i class="fa fa-briefcase user-profile-icon"></i> @Model.Title
+                        </li>
+                        <br />
+                        <li class="m-top-xs">
+                            <i class="fa fa-external-link user-profile-icon"></i>
+                            <a href="#" target="_blank">@Model.Email</a>
+                        </li>
+                    </ul>
+                    <br />
+                    <a class="invisible btn btn-success"><i class="fa fa-edit m-right-xs"></i>Edit Profile</a>
+                    <br>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Çalışan Bilgileri Bitiş*@
+
+    <!-- Tabs Control Start -->
+    <div class="col-md-12 col-sm-6  ">
+        <div class="x_panel">
+            <div class="x_content">
+                <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Özet İzinlerim</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Özet Avanslarım</a>
+                    </li>
+                    @*
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Özet Harcamalarım</a>
+                    </li>
+                    *@
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                        <!-- DataTable 1 Start -->
+                        <div class="col-md-6 col-sm-12 ">
+
+                            <div class="x_panel">
+
+                                <div class="x_content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card-box table-responsive">
+
+
+                                                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>İzin Kodu</th>
+                                                            <th>İzin Türü</th>
+                                                            <th>İzin Günü</th>
+                                                            <th>Talep Tarihi</th>
+                                                            <th>Onay Durumu</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item in sumPer)
+                                                        {
+                                                        <tr>
+                                                            <td class="sorting_1">@item.PermissionID</td>
+                                                            <td>@item.PermissionType</td>
+                                                            <td>@item.NumberOfDaysOff</td>
+                                                            <td>@item.RequestDate.ToString("dd/MM/yyyy")</td>
+
+                                                            @if (item.PermitStatus == PermitStatus.Onaylı)
+                                                            {
+                                                                <td class="green">@item.PermitStatus</td>
+                                                            }
+                                                            else if (item.PermitStatus == PermitStatus.Onaylanmamış)
+                                                            {
+                                                                <td class="red">@item.PermitStatus</td>
+                                                            }
+                                                            else if (item.PermitStatus == PermitStatus.Bekleyen)
+                                                            {
+                                                                <td class="yellow">@item.PermitStatus</td>
+                                                            }
+                                                        </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- DataTable 1 Finish -->
+
+                        <!-- Pie Chart Start -->
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"></h5>
+
+
+                                    <div id="pie" style="min-height: 400px;" class="echart"></div>
+
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", () => {
+                                          echarts.init(document.querySelector("#pie")).setOption({
+                                            title: {
+                                              text: 'Onaylanmış',
+                                              subtext: 'İzinlerim',
+                                              left: 'center'
+                                            },
+                                            tooltip: {
+                                              trigger: 'item'
+                                            },
+                                            legend: {
+                                              orient: 'vertical',
+                                              left: 'left'
+                                            },
+                                            series: [{
+                                              name: 'Access From',
+                                              type: 'pie',
+                                              radius: '50%',
+                                              data: [{
+                                                  value: 1048,
+                                                  name: 'Yıllık İzin'
+                                                },
+                                                {
+                                                  value: 735,
+                                                  name: 'Doğum İzni'
+                                                },
+                                                {
+                                                  value: 580,
+                                                  name: 'Babalık İzni'
+                                                },
+                                                {
+                                                  value: 484,
+                                                  name: 'Evlilik İzni'
+                                                },
+                                                {
+                                                  value: 300,
+                                                  name: 'Hastalık İzni'
+                                                },
+                                                {
+                                                  value: 200,
+                                                  name: 'Vefat İzni'
+                                                },
+                                                {
+                                                  value: 150,
+                                                  name: 'Ücretsiz İzin'
+                                                },
+                                                {
+                                                  value: 50,
+                                                  name: 'Taşınma İzni'
+                                                },
+                                                {
+                                                  value: 120,
+                                                  name: 'Diğer'
+                                                }
+                                              ],
+                                              emphasis: {
+                                                itemStyle: {
+                                                  shadowBlur: 10,
+                                                  shadowOffsetX: 0,
+                                                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                }
+                                              }
+                                            }]
+                                          });
+                                        });
+                                    </script>
+                                    <!-- End Pie Chart -->
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pie Chart Finish -->
+
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                        <!-- DataTable 2 Start -->
+                        <div class="col-md-6 col-sm-12 ">
+                            <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card-box table-responsive">
+                                                <table id="datatable-keytable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Avans Kodu</th>
+                                                            <th>Avans Tipi</th>
+                                                            <th>Talep Tarihi</th>
+                                                            <th>Onay Durumu</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in sumAdv)
+                                                        {
+                                                            <tr>
+                                                                <td class="sorting_1">@item.AdvanceID</td>
+                                                                <td>@item.AdvanceType İzni</td>
+                                                                <td>@item.RequestDate.ToString("dd/MM/yyyy")</td>
+                                                                <td>@item.AdvanceType</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- DataTable 2 Finish -->
+
+                        <!-- Pie2 Chart Start -->
+                                    <!-- Buraya Bakılacak -->                        
+                        <!-- Pie2 Chart Finish -->
+
+                    </div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                        <!-- DataTable 3 Start -->
+                        <div class="col-md-6 col-sm-12 ">
+
+                            <div class="x_panel">
+
+                                <div class="x_content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card-box table-responsive">
+                                                <table id="datatable-fixed-header" class="table table-striped table-bordered dt-fixed-header nowrap" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>First name</th>
+                                                            <th>Last name</th>
+                                                            <th>Position</th>
+                                                            <th>Office</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item in sumPer)
+                                                        {
+                                                            <tr>
+                                                                <td class="sorting_1">@item.PermissionID</td>
+                                                                <td>@item.PermissionType İzni</td>
+                                                                <td>@item.RequestDate.ToString("dd/MM/yyyy")</td>
+                                                                <td>@item.PermitStatus</td>
+                                                            </tr>
+                                                        }
+
+
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- DataTable 3 Finish -->
+
+                        <!-- Pie3 Chart Start -->
+                                    <!-- Buraya Bakılacak -->
+                        <!-- Pie3 Chart Finish -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tabs Control Finish -->
+
+</div>
+
+
+
